@@ -52,7 +52,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="container mx-auto flex min-h-[calc(100dvh-5rem)] max-w-4xl items-center space-y-6 py-8">
+    <main className="container mx-auto flex min-h-[calc(100dvh-5rem)] max-w-4xl items-center space-y-6 p-4 py-8">
       <section className="my-auto h-fit w-full pb-40">
         <div className="mb-8 text-center">
           <h1 className="mb-2 text-3xl font-light">Prompt Enhancer</h1>

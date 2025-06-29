@@ -10,18 +10,49 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PiArrowElbowUpLeft, PiArrowElbowUpRight, PiStarFourBold } from "react-icons/pi";
 import { cn } from "@/lib/utils";
 
+interface HistoryEntry {
+  type: "request" | "response";
+  text: string;
+}
+
 export default function HomePage() {
   const [isPending, startTransition] = useTransition();
   const [prompt, setPrompt] = useState("");
   const [selectedBadges, setSelectedBadges] = useState<string[]>([]);
   const [response, setResponse] = useState<any>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [currentHistoryIndex, setCurrentHistoryIndex] = useState(-1);
 
   const handleBadgeToggle = (badgeId: string) => {
     setSelectedBadges((prev) => (prev.includes(badgeId) ? prev.filter((id) => id !== badgeId) : [...prev, badgeId]));
   };
 
+  const handleHistoryNavigation = (direction: "back" | "forward") => {
+    if (direction === "back" && currentHistoryIndex > 0) {
+      const newIndex = currentHistoryIndex - 1;
+      setCurrentHistoryIndex(newIndex);
+      setPrompt(history[newIndex].text);
+    } else if (direction === "forward" && currentHistoryIndex < history.length - 1) {
+      const newIndex = currentHistoryIndex + 1;
+      setCurrentHistoryIndex(newIndex);
+      setPrompt(history[newIndex].text);
+    }
+  };
+
+  const addToHistory = (request: string, response: string) => {
+    const newEntries: HistoryEntry[] = [
+      { type: "request", text: request },
+      { type: "response", text: response },
+    ];
+
+    setHistory((prev) => [...prev, ...newEntries]);
+    setCurrentHistoryIndex((prev) => prev + 2); // Move to the response entry
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const originalPrompt = prompt; // Store the original prompt
+
     startTransition(async () => {
       try {
         const res = await fetch("/api/aisdk/chat", {
@@ -30,7 +61,7 @@ export default function HomePage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            prompt,
+            prompt: originalPrompt,
             selectedBadges,
           }),
         });
@@ -41,6 +72,10 @@ export default function HomePage() {
 
         const data = await res.json();
         console.log("API Response:", data);
+
+        // Add to history (request and response)
+        addToHistory(originalPrompt, data);
+
         // setResponse(data);
         setPrompt(data);
       } catch (error) {
@@ -50,6 +85,9 @@ export default function HomePage() {
       }
     });
   };
+
+  const canGoBack = currentHistoryIndex > 0;
+  const canGoForward = currentHistoryIndex < history.length - 1;
 
   return (
     <main className="container mx-auto flex min-h-[calc(100dvh-5rem)] max-w-4xl items-center space-y-6 p-4 py-8">
@@ -73,10 +111,22 @@ export default function HomePage() {
                 />
                 <div className="flex justify-between gap-1 rounded-b-2xl bg-white p-4 dark:bg-white/10">
                   <div className="flex gap-1">
-                    <Button size="icon" variant={"outline"} className="rounded-full">
+                    <Button
+                      size="icon"
+                      variant={"outline"}
+                      className="rounded-full"
+                      onClick={() => handleHistoryNavigation("back")}
+                      disabled={!canGoBack}
+                    >
                       <PiArrowElbowUpLeft className="size-5" />
                     </Button>
-                    <Button size="icon" variant={"outline"} className="rounded-full">
+                    <Button
+                      size="icon"
+                      variant={"outline"}
+                      className="rounded-full"
+                      onClick={() => handleHistoryNavigation("forward")}
+                      disabled={!canGoForward}
+                    >
                       <PiArrowElbowUpRight className="size-5" />
                     </Button>
                   </div>
@@ -100,32 +150,6 @@ export default function HomePage() {
 
               <PreferenceBadges selectedBadges={selectedBadges} onBadgeToggle={handleBadgeToggle} />
             </div>
-
-            {/* Response Section */}
-            {response && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between text-lg">
-                    Enhanced Prompt
-                    <CopyButton text={response} className="flex-shrink-0" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {response.error ? (
-                    <div className="rounded-md bg-red-50 p-4 text-red-600">
-                      <p className="font-medium">Error:</p>
-                      <p>{response.error}</p>
-                    </div>
-                  ) : (
-                    <div className="prose max-w-none">
-                      <div className="rounded-md border bg-gray-50 p-4">
-                        <p className="leading-relaxed whitespace-pre-wrap text-gray-800">{response}</p>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
           </div>
         </div>
       </section>

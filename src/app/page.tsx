@@ -18,7 +18,7 @@ export default function HomePage() {
   const [isPending, startTransition] = useTransition();
   const [prompt, setPrompt] = useState("");
   const [selectedBadges, setSelectedBadges] = useState<string[]>([]);
-  const [response, setResponse] = useState<any>(null);
+  const [setResponse] = useState<any>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(-1);
 

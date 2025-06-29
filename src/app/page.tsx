@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CopyButton } from "@/components/ui/copy-button";
 import { PreferenceBadges } from "@/components/preference-badges";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PiArrowElbowUpLeft, PiArrowElbowUpRight, PiStarFourBold } from "react-icons/pi";
 import { cn } from "@/lib/utils";
 

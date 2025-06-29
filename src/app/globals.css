@@ -195,3 +195,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.textarea-no-resize {
+  resize: none;
+}

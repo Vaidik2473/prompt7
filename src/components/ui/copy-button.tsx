@@ -31,31 +31,31 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   return (
     <Button
       variant="outline"
-      size="sm"
+      size="icon"
       onClick={handleCopy}
       className={`relative overflow-hidden transition-all duration-200 hover:bg-gray-50 ${className}`}
     >
-      <div className="relative w-4 h-4">
+      <div className="relative size-5">
         {/* Copy Icon */}
         <PiCopyDuotone
-          className={`absolute inset-0 w-4 h-4 transition-all duration-300 ${
+          className={`absolute inset-0 size-5 transition-all duration-300 ${
             isCopied
-              ? "opacity-0 scale-75 rotate-90"
-              : "opacity-100 scale-100 rotate-0"
+              ? "scale-75 rotate-90 opacity-0"
+              : "scale-100 rotate-0 opacity-100"
           }`}
         />
 
         {/* Check Icon */}
         <PiCheck
-          className={`absolute inset-0 w-4 h-4 transition-all duration-300 text-green-600 ${
+          className={`absolute inset-0 size-5 transition-all duration-300 ${
             isCopied
-              ? "opacity-100 scale-100 rotate-0"
-              : "opacity-0 scale-75 -rotate-90"
+              ? "scale-100 rotate-0 opacity-100"
+              : "scale-75 -rotate-90 opacity-0"
           }`}
         />
       </div>
 
-      <span>{isCopied ? "Copied!" : "Copy"}</span>
+      {/* <span>{isCopied ? "Copied!" : "Copy"}</span> */}
     </Button>
   );
 };

@@ -1,22 +1,9 @@
 import Logo from "@/components/navigation/logo";
 import { Button } from "@/components/ui/button";
-import {
-  PiAirplaneDuotone,
-  PiClockCounterClockwiseDuotone,
-  PiGearFineDuotone,
-} from "react-icons/pi";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Badge } from "../ui/badge";
+import { PiClockCounterClockwiseDuotone, PiGearFineDuotone } from "react-icons/pi";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ModeToggle } from "../ui/mode-toggler";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -68,11 +55,7 @@ export default function Navbar() {
                   <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                     {navigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index} className="w-full">
-                        <NavigationMenuLink
-                          href={link.href}
-                          className="py-1.5"
-                          active={link.active}
-                        >
+                        <NavigationMenuLink href={link.href} className="py-1.5" active={link.active}>
                           {link.label}
                         </NavigationMenuLink>
                       </NavigationMenuItem>
@@ -95,7 +78,7 @@ export default function Navbar() {
                     <NavigationMenuLink
                       active={link.active}
                       href={link.href}
-                      className="text-muted-foreground  hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary h-full rounded-none border-y-2 border-transparent justify-center items-center py-1.5 font-medium hover:bg-transparent gap-2 data-[active]:bg-transparent! !flex flex-row"
+                      className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary !flex h-full flex-row items-center justify-center gap-2 rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
                     >
                       {link.label}
                     </NavigationMenuLink>
@@ -107,6 +90,7 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
+          <ModeToggle />
           <Button size="sm" variant="outline" className="text-sm">
             <PiGearFineDuotone /> AI Settings
           </Button>
